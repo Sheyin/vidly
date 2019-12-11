@@ -6,15 +6,16 @@ class FavoriteItem extends Component {
     movieId: this.props.movieId
   };
 
-  doLiked = () => {
-    this.setState({ isLiked: this.state.isLiked ? false : true });
-  };
-
   whichComponent() {
     let heartClass = "fa fa-heart";
-    heartClass += this.state.isLiked ? "" : "-o";
+    heartClass += this.props.movie.favorited ? "" : "-o";
     return (
-      <i onClick={this.doLiked} className={heartClass} aria-hidden="true"></i>
+      <i
+        onClick={() => this.props.handleFavorite(this.props.movie)}
+        className={heartClass}
+        style={{ cursor: "pointer" }}
+        aria-hidden="true"
+      ></i>
     );
   }
 

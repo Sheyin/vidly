@@ -8,6 +8,18 @@ class MovieTable extends Component {
     movieCount: getMovies().length
   };
 
+  constructor() {
+    super();
+    let newMovies = getMovies().map(movie => {
+      if (!movie.hasOwnProperty("favorited")) {
+        movie.favorited = false;
+      }
+      return movie;
+    });
+    this.state.movies = newMovies;
+    this.state.movieCount = newMovies.length;
+  }
+
   deleteButton = movie => {
     let newMovies = this.state.movies.filter(x => x._id !== movie._id);
     this.setState({ movies: newMovies, movieCount: this.state.movieCount - 1 });
@@ -76,7 +88,11 @@ class MovieTable extends Component {
         <td>{numberInStock}</td>
         <td>{dailyRentalRate}</td>
         <td>
-          <FavoriteItem key={_id} movieId={_id} />
+          <FavoriteItem
+            key={_id}
+            movie={movie}
+            handleFavorite={this.doFavorite}
+          />
         </td>
         <td>
           <button
@@ -89,6 +105,14 @@ class MovieTable extends Component {
       </tr>
     );
   }
+
+  doFavorite = movie => {
+    const index = this.state.movies.indexOf(movie);
+    let newMovies = [...this.state.movies];
+    //console.log(`${movie.title} is currently ${movie.favorited}`);
+    newMovies[index].favorited = !newMovies[index].favorited;
+    this.setState({ movies: newMovies });
+  };
 }
 
 export default MovieTable;
