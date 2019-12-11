@@ -109,7 +109,6 @@ class MovieTable extends Component {
   doFavorite = movie => {
     const index = this.state.movies.indexOf(movie);
     let newMovies = [...this.state.movies];
-    //console.log(`${movie.title} is currently ${movie.favorited}`);
     newMovies[index].favorited = !newMovies[index].favorited;
     this.setState({ movies: newMovies });
   };

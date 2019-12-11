@@ -1,27 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 
-class FavoriteItem extends Component {
-  state = {
-    isLiked: false,
-    movieId: this.props.movieId
-  };
+const FavoriteItem = props => {
+  let heartClass = "fa fa-heart";
+  heartClass += props.movie.favorited ? "" : "-o";
 
-  whichComponent() {
-    let heartClass = "fa fa-heart";
-    heartClass += this.props.movie.favorited ? "" : "-o";
-    return (
-      <i
-        onClick={() => this.props.handleFavorite(this.props.movie)}
-        className={heartClass}
-        style={{ cursor: "pointer" }}
-        aria-hidden="true"
-      ></i>
-    );
-  }
-
-  render() {
-    return this.whichComponent();
-  }
-}
+  return (
+    <i
+      onClick={() => props.handleFavorite(props.movie)}
+      className={heartClass}
+      style={{ cursor: "pointer" }}
+      aria-hidden="true"
+    ></i>
+  );
+};
 
 export default FavoriteItem;
