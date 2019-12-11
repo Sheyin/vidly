@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
+import FavoriteItem from "./favoriteItem";
 
 class MovieTable extends Component {
   state = {
@@ -8,7 +9,7 @@ class MovieTable extends Component {
   };
 
   deleteButton = movie => {
-    let newMovies = this.state.movies.filter(x => x._id != movie._id);
+    let newMovies = this.state.movies.filter(x => x._id !== movie._id);
     this.setState({ movies: newMovies, movieCount: this.state.movieCount - 1 });
   };
 
@@ -74,6 +75,9 @@ class MovieTable extends Component {
         <td>{genre}</td>
         <td>{numberInStock}</td>
         <td>{dailyRentalRate}</td>
+        <td>
+          <FavoriteItem key={_id} movieId={_id} />
+        </td>
         <td>
           <button
             onClick={() => this.deleteButton(movie)}
