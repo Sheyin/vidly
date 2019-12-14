@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
+import { getGenres } from "../services/fakeGenreService";
 import FavoriteItem from "./favoriteItem";
 import Pagination from "../common/pagination";
 import { paginate } from "../utils/paginate";
+import ListGroup from "./listGroup";
 
 class MovieTable extends Component {
   state = {
     movies: getMovies(),
-    movieCount: getMovies().length,
     pageSize: 4,
-    currentPage: 1
+    currentPage: 1,
+    activeGenre: "All Genres"
   };
 
   constructor() {
@@ -21,41 +23,75 @@ class MovieTable extends Component {
       return movie;
     });
     this.state.movies = newMovies;
-    this.state.movieCount = newMovies.length;
   }
 
   deleteButton = movie => {
     let newMovies = this.state.movies.filter(x => x._id !== movie._id);
-    this.setState({ movies: newMovies, movieCount: this.state.movieCount - 1 });
+    this.setState({ movies: newMovies });
   };
 
   resetMovies = () => {
-    this.setState({ movies: getMovies(), movieCount: getMovies().length });
+    this.setState({ movies: getMovies() });
   };
 
   handlePageChange = page => {
     this.setState({ currentPage: page });
   };
 
+  handleGenreSelection = genre => {
+    this.setState({ activeGenre: genre });
+    // filter displayed list accordingly
+    if (genre === "All Genres") {
+      this.setState({ movies: getMovies(), currentPage: 1 });
+    } else {
+      this.setState({
+        movies: getMovies().filter(movie => movie.genre.name === genre),
+        currentPage: 1
+      });
+    }
+  };
+
+  getGenreNames() {
+    let genres = ["All Genres"];
+    getGenres().map(genre => {
+      genres.push(genre.name);
+    });
+    return genres;
+  }
+
   render() {
     const { pageSize, currentPage, movies: allMovies } = this.state;
     const movies = paginate(allMovies, currentPage, pageSize);
+    const genres = this.getGenreNames();
+    //const genres = ["Romance", "Horror", "Anime"];
+    //console.log(genres);
+    //console.log(this.state.activeGenre);
+
     return (
-      <div>
-        <span>{this.movieCountSummary()}</span>
-        {this.movieTable(movies)}
-        <Pagination
-          itemCount={this.state.movieCount}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-        />
+      <div className="row">
+        <div className="col-3">
+          <ListGroup
+            listItems={genres}
+            activeItem={this.state.activeGenre}
+            onListSelection={this.handleGenreSelection}
+          />
+        </div>
+        <div className="col">
+          <span>{this.movieCountSummary()}</span>
+          {this.movieTable(movies)}
+          <Pagination
+            itemCount={this.state.movies.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
       </div>
     );
   }
 
   movieCountSummary() {
-    if (this.state.movieCount === 0) {
+    if (this.state.movies.length === 0) {
       return (
         <div>
           There are no movies in the database.{" "}
@@ -68,12 +104,12 @@ class MovieTable extends Component {
         </div>
       );
     } else {
-      return `Showing ${this.state.movieCount} movies in the database.`;
+      return `Showing ${this.state.movies.length} movies in the database.`;
     }
   }
 
   movieTable(movies) {
-    if (this.state.movieCount === 0) {
+    if (this.state.movies.length === 0) {
       return;
     } else {
       return (
