@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import FavoriteItem from "./favoriteItem";
+import Pagination from "../common/pagination";
+import { paginate } from "../utils/paginate";
 
 class MovieTable extends Component {
   state = {
     movies: getMovies(),
-    movieCount: getMovies().length
+    movieCount: getMovies().length,
+    pageSize: 4,
+    currentPage: 1
   };
 
   constructor() {
@@ -29,11 +33,23 @@ class MovieTable extends Component {
     this.setState({ movies: getMovies(), movieCount: getMovies().length });
   };
 
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
   render() {
+    const { pageSize, currentPage, movies: allMovies } = this.state;
+    const movies = paginate(allMovies, currentPage, pageSize);
     return (
       <div>
         <span>{this.movieCountSummary()}</span>
-        {this.movieTable()}
+        {this.movieTable(movies)}
+        <Pagination
+          itemCount={this.state.movieCount}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </div>
     );
   }
@@ -56,7 +72,7 @@ class MovieTable extends Component {
     }
   }
 
-  movieTable() {
+  movieTable(movies) {
     if (this.state.movieCount === 0) {
       return;
     } else {
@@ -69,9 +85,10 @@ class MovieTable extends Component {
               <th>Stock</th>
               <th>Rate</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
-          <tbody>{this.state.movies.map(movie => this.movieRow(movie))}</tbody>
+          <tbody>{movies.map(movie => this.movieRow(movie))}</tbody>
         </table>
       );
     }
