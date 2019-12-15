@@ -1,28 +1,35 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
-import FavoriteItem from "./favoriteItem";
+import FavoriteItem from "../common/favoriteItem";
 import Pagination from "../common/pagination";
 import { paginate } from "../utils/paginate";
-import ListGroup from "./listGroup";
+import ListGroup from "../common/listGroup";
 
 class MovieTable extends Component {
   state = {
-    movies: getMovies(),
+    movies: [],
+    genres: [],
     pageSize: 4,
     currentPage: 1,
     activeGenre: "All Genres"
   };
 
-  constructor() {
-    super();
-    let newMovies = getMovies().map(movie => {
-      if (!movie.hasOwnProperty("favorited")) {
-        movie.favorited = false;
-      }
-      return movie;
-    });
-    this.state.movies = newMovies;
+  // This exists because I was preparing for the possibility of storing which items are favorited on the server,
+  // but it doesn't look like we are headed that route in the lectures.
+  //constructor() {
+  //super();
+  //let newMovies = getMovies().map(movie => {
+  //  if (!movie.hasOwnProperty("favorited")) {
+  //    movie.favorited = false;
+  //  }
+  //  return movie;
+  //});
+  //this.state.movies = newMovies;
+  //}
+
+  componentDidMount() {
+    this.setState({ movies: getMovies(), genres: getGenres() });
   }
 
   deleteButton = movie => {
