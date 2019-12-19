@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import MovieTable from "./components/movieTable.jsx";
+import Movies from "./components/movies.jsx";
 
 function App() {
   return (
     <main className="container">
-      <MovieTable />
+      <Movies />
     </main>
   );
 }
