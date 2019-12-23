@@ -56,6 +56,11 @@ class Movies extends Component {
     this.setState({ movies: newMovies });
   };
 
+  handleSort = path => {
+    console.log("test from handleSort!");
+    console.log(path);
+  };
+
   movieList = movies => {
     if (this.state.movies.length === 0) {
       return <div>There are no movies in the database.</div>;
@@ -69,11 +74,14 @@ class Movies extends Component {
             movies={movies}
             doUpdateMovies={this.updateMovies}
             doDeleteButton={this.deleteButton}
+            onSort={this.handleSort}
           />
         </div>
       );
     }
   };
+
+  handleSort = () => {};
 
   render() {
     const { pageSize, currentPage, movies: allMovies } = this.state;
@@ -90,7 +98,15 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          {this.movieList(movies)}
+          <span>
+            Showing {this.state.movies.length} movies in the database.
+          </span>
+          <MovieTable
+            movies={movies}
+            doUpdateMovies={this.updateMovies}
+            doDeleteButton={this.deleteButton}
+            onSort={this.handleSort}
+          />
 
           <Pagination
             itemCount={this.state.movies.length}

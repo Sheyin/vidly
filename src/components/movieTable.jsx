@@ -3,7 +3,7 @@ import FavoriteItem from "../common/favoriteItem";
 import PropTypes from "prop-types";
 
 const MovieTable = props => {
-  const { movies } = props;
+  const { movies, onSort } = props;
 
   const movieRow = movie => {
     const { _id, title, numberInStock, dailyRentalRate } = movie;
@@ -42,10 +42,16 @@ const MovieTable = props => {
         <table>
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Genre</th>
-              <th>Stock</th>
-              <th>Rate</th>
+              <th onClick={() => props.onSort("title")}>Title</th>
+              <th
+                onClick={() => {
+                  console.log("Genre clicked locally");
+                }}
+              >
+                Genre
+              </th>
+              <th onClick={() => onSort("numberInStock")}>Stock</th>
+              <th onClick={() => onSort("dailyRentalRate")}>Rate</th>
               <th></th>
               <th></th>
             </tr>
@@ -60,7 +66,8 @@ const MovieTable = props => {
 MovieTable.propTypes = {
   movies: PropTypes.array.isRequired,
   doUpdateMovies: PropTypes.func.isRequired,
-  doDeleteButton: PropTypes.func.isRequired
+  doDeleteButton: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired
 };
 
 export default MovieTable;
